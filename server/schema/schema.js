@@ -2,6 +2,15 @@ const graphql = require('graphql')
 
 const {GraphQLObjectType, GraphQLString, GraphQLSchema} = graphql
 
+// dummy data
+
+let books = [{
+{name: "Name of the wind", genre: "Fantasy", id: "1"},
+{name: "The final empire", genre: "Fantasy", id: "2"},
+{name: "The long earth", genre: "Sci-Fi", id: "3"}
+
+}]
+
 // this object defines what is the book object is about
 const BookType = new GraphQLObjectType({
     name: 'Book',
@@ -38,6 +47,8 @@ const RootQuery = new GraphQLObjectType({
 })
 
 
-module.exports =  new Grap
+module.exports =  new GraphQLSchema({
+    query: RootQuery
+})
 
  
