@@ -1,11 +1,12 @@
 const graphql = require("graphql");
 const _ = require("lodash");
 const {
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLSchema,
-  GraphQLID,
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLSchema,
+    GraphQLID,
+    GraphQLInt,
+  GraphQLList
 } = graphql;
 
 // dummy data
@@ -15,7 +16,7 @@ let books = [
     name: "Scooby-Doo! Abracadabra-Doo",
     genre: "Animation|Children|Mystery",
     id: "1",
-    authorid: " 7",
+    authorid: "7",
   },
   {
     name: "Road Warrior, The (Mad Max 2)",
@@ -27,43 +28,43 @@ let books = [
     name: "Set Me Free (Emporte-moi)",
     genre: "Drama",
     id: "3",
-    authorid: " 2",
+    authorid: "2",
   },
   {
     name: "The Grump",
     genre: "Comedy",
     id: "4",
-    authorid: " 10",
+    authorid: "10",
   },
   {
     name: "Paradise Lost 3: Purgatory",
     genre: "Documentary",
     id: "5",
-    authorid: " 5",
+    authorid: "5",
   },
   {
     name: "Xtro 3: Watch the Skies",
     genre: "Horror|Sci-Fi",
     id: "6",
-    authorid: " 10",
+    authorid: "10",
   },
   {
     name: "Down in the Delta",
     genre: "Drama",
     id: "7",
-    authorid: " 3",
+    authorid: "3",
   },
   {
     name: "Solan og Ludvig: Jul i Flåklypa",
     genre: "Animation|Children",
     id: "8",
-    authorid: " 6",
+    authorid: "6",
   },
   {
     name: "Young Goethe in Love",
     genre: "Drama|Romance",
     id: "9",
-    authorid: " 10",
+    authorid: "10",
   },
   {
     name: "Chosen One, The",
@@ -126,35 +127,38 @@ let authors = [
   },
 ];
 
+const AuthorType = new GraphQLObjectType({
+    name: "Author",
+    fields: () => ({
+      id: { type: GraphQLID },
+      name: { type: GraphQLString },
+      age: { type: GraphQLInt },
+      books: {
+          type: new GraphQLList(BookType),
+          resolve(parent, args) {            
+            return _.filter(books, {authorid: parent.id})
+          }
+      }
+    }),
+  });
+  
+
 // this object defines what is the book object is about
 const BookType = new GraphQLObjectType({
   name: "Book",
-  // fields need to be functions.
-  // when we have mulitiple types later on this funciton will help us to overcome reference erros
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
     author: {
       type: AuthorType,
-
-      // parent element has information about the quered data
       resolve(parent, args) {
-        console.log(parent);
         return _.find(authors, { id: parent.authorid });
       },
     },
   }),
 });
 
-const AuthorType = new GraphQLObjectType({
-  name: "Author",
-  fields: () => ({
-    id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    age: { type: GraphQLInt },
-  }),
-});
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
