@@ -1,15 +1,14 @@
 const graphql = require('graphql')
-
+const _ = require('lodash')
 const {GraphQLObjectType, GraphQLString, GraphQLSchema} = graphql
 
 // dummy data
 
-let books = [{
-{name: "Name of the wind", genre: "Fantasy", id: "1"},
-{name: "The final empire", genre: "Fantasy", id: "2"},
-{name: "The long earth", genre: "Sci-Fi", id: "3"}
-
-}]
+let books = [
+    {name: "Name of the wind", genre: "Fantasy", id: "1"},
+    {name: "The final empire", genre: "Fantasy", id: "2"},
+    {name: "The long earth", genre: "Sci-Fi", id: "3"}
+]
 
 // this object defines what is the book object is about
 const BookType = new GraphQLObjectType({
@@ -26,25 +25,20 @@ const BookType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        // query for a book
-        // the name matters
         book: {
             type: BookType,
-            // any kind of arguments. 
-            //when someone wants to query the book 
-            // they have to pass an argument when they are looking for a book.
-            // and in this case it will be an ide
-
             args: {id: {type: GraphQLString}},
             resolve(parent, args) {
                 // code to get data from db/ other source
                 // this will come handy when we define realationships between data
-
+               return _.find(books, {id: args.id})
             }
 
         }
     }
 })
+
+
 
 
 module.exports =  new GraphQLSchema({
