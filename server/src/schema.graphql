@@ -17,6 +17,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
+  postedVy: User
 }
 
 type AuthPayload {
