@@ -42,7 +42,7 @@ let links = [{
   }
 
 const server = new GraphQLServer({
-  typeDefs: "schema.graphql",
+  typeDefs: "src/schema.graphql",
   resolvers
 })
 
