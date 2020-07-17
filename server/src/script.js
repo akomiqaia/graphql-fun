@@ -1,6 +1,6 @@
-const {PrismClient} = require("@prisma/client")
+const { PrismaClient } = require('@prisma/client')
 
-const prisma = new PrismClient()
+const prisma = new PrismaClient()
 
 async function main() {
     const allLinks = await prisma.link.findMany()
