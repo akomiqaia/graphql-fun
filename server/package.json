@@ -16,5 +16,8 @@
     "graphql-yoga": "^1.18.3",
     "lodash": "^4.17.19",
     "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.2.2"
   }
 }

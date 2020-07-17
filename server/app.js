@@ -1,13 +1,49 @@
-const express = require('express')
-const {graphqlHTTP} = require('express-graphql')
-const schema = require('./schema/schema')
-const app = express();
+const {GraphQLServer, PubSub} = require('graphql-yoga')
 
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true
-}))
+let links = [{
+    id: 'link-0',
+    url: 'www.howtographql.com',
+    description: 'Fullstack tutorial for GraphQL'
+  }]
 
-app.listen(4000, () => {
-    console.log('Now listening for request on port 4000');
+  let idCount = links.length
+  const resolvers = {
+    Query: {
+      info: () => `This is the API of a Hackernews Clone`,
+      feed: () => links,
+    },
+    Mutation: {
+        post: (parent, args) => {
+            const link = {
+                id: `link-${idCount++}`,
+                description: args.description,
+                urls: args.urls,
+            }
+            links.push(link)
+            return link
+        },
+        updateLink: (parent, args) => {
+          for(let i= 0; i < links.length; i++) {
+            if(args.id == links[i].id) {
+              if (args.url) links[i].url = args.url
+              if (args.description) links[i].description = args.description
+            }
+          }
+        },
+        deleteLink: (parent, args) => {
+          for(let i= 0; i < links.length; i++) {
+            if(args.id == links[i].id) {
+              links.splice(i, 1)
+            }
+          }
+
+        }
+    },
+  }
+
+const server = new GraphQLServer({
+  typeDefs: "schema.graphql",
+  resolvers
 })
+
+server.start(() => console.log(`Server is running on http://localhost:4000`))
