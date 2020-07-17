@@ -1,5 +1,6 @@
 const {GraphQLServer, PubSub} = require('graphql-yoga')
 const { PrismaClient } = require('@prisma/client')
+const { request } = require('express')
 
 
 const prisma = new PrismaClient()
@@ -45,8 +46,14 @@ const prisma = new PrismaClient()
 const server = new GraphQLServer({
   typeDefs: "src/schema.graphql",
   resolvers,
-  context: {
-    prisma,
+  // instead of attaching the object itself we created the `context` as a funtion which return the `context`
+  // the advantage of this approach is that you can attach the HTTp requests taht carries the incoming GraphQL query(or muttation) to the context as well
+  // This allows our resolvers to read the `Authorization` header and validate if the user who subbmitted the reqeust is eligible to perfomr the requested operation
+  context: request => {
+    return {
+      ...request,
+      prisma,
+    }
   }
 })
 
