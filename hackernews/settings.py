@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k2(z0@%%-8ne%iq$-a3$o#j=$nag=s5ju%8(bq4^e#qgk_s%2!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','https://django-testapi.herokuapp.com']
 
@@ -79,9 +79,8 @@ WSGI_APPLICATION = 'hackernews.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangogirls',
-        'USER': 'name',
-        'PASSWORD': '',
+        'NAME': 'hackernews',
+        'USER': 'admin',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -123,7 +122,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 
 # define schema location for Graphene
@@ -134,5 +133,5 @@ GRAPHENE = {
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
-DATABASES['default'].update(db_from_env)
 db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
